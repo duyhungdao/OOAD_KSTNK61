@@ -5,7 +5,12 @@
  */
 package View;
 
+import Entity.Resident;
+import Model.ResidentModel;
 import java.awt.event.KeyEvent;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -18,6 +23,7 @@ public class LoginResident extends javax.swing.JFrame {
      */
     public LoginResident() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -48,12 +54,14 @@ public class LoginResident extends javax.swing.JFrame {
 
         jLabel2.setText("Mật khẩu");
 
+        jTextField1.setText("dannvc");
         jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTextField1login(evt);
             }
         });
 
+        jPasswordField1.setText("1");
         jPasswordField1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jPasswordField1login(evt);
@@ -158,6 +166,18 @@ public class LoginResident extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void login() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String username = jTextField1.getText();
+        String password = jPasswordField1.getText();
+        
+        List<Resident> listResident = ResidentModel.INST.getListAll().stream()
+                .filter(resident -> resident.getUsername().equals(username) && resident.getPassword().equals(password))
+                .collect(Collectors.toList());
+        
+        if (listResident.size() > 0) {
+            new ResidentView(listResident.get(0)).setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không chính xác! Vui lòng đăng nhập lại.", "Đăng nhập thất bại", JOptionPane.WARNING_MESSAGE);
+        }
     }
 }
